@@ -1,5 +1,5 @@
 /* ============================================================
-   P.K CREATIVE & DIGITAL STUDIO — Interaction & Motion Engine
+   SKAVO TECHNOLOGIES — Interaction & Motion Engine
    Preloader · Native Smooth Scroll · Custom Cursor · Magnetic Buttons
    Portfolio Filter · Interactive Contact & WhatsApp Generator · DataCoop Telemetry
    ============================================================ */
@@ -296,7 +296,7 @@
   /* ============================================================
      Cyber-Editorial Kinetic Character Scramble Decrypt Engine
      ============================================================ */
-  const scrambleGlyphs = 'PK0184#*▲➔✦X9_/';
+  const scrambleGlyphs = 'SKAVO0184#*▲➔✦X9_/';
   function scrambleText(el) {
     if (el.dataset.scrambled) return;
     el.dataset.scrambled = '1';
@@ -388,27 +388,23 @@
 
   /* ============================================================
      Interactive Contact Form & Dynamic WhatsApp Generator
+     Dual Contacts: Palani (+91 8122701981) & Guru (+91 9342785176)
      ============================================================ */
   const servicePillBtns = document.querySelectorAll('.service-pill-btn');
-  const budgetPillBtns = document.querySelectorAll('.budget-pill-btn');
   const projectForm = document.getElementById('projectForm');
   const formMsg = document.getElementById('formMsg');
-  const whatsappBtn = document.getElementById('whatsappBtn');
-  const directWhatsApp = document.getElementById('directWhatsApp');
+  const whatsappBtn1 = document.getElementById('whatsappBtn1');
+  const whatsappBtn2 = document.getElementById('whatsappBtn2');
+  const directWhatsApp1 = document.getElementById('directWhatsApp1');
+  const directWhatsApp2 = document.getElementById('directWhatsApp2');
+
+  const WA_NUM1 = '918122701981';
+  const WA_NUM2 = '919342785176';
 
   // Toggle service selection (multi-select)
   servicePillBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
       btn.classList.toggle('active');
-      updateWhatsAppLink();
-    });
-  });
-
-  // Toggle budget selection (single select)
-  budgetPillBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      budgetPillBtns.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
       updateWhatsAppLink();
     });
   });
@@ -422,8 +418,8 @@
   }
 
   function getSelectedBudget() {
-    const active = document.querySelector('.budget-pill-btn.active');
-    return active ? active.getAttribute('data-budget') : '₹50,000 - ₹2 Lakhs';
+    const typed = (document.getElementById('clientBudget')?.value || '').trim();
+    return typed ? typed : 'To be discussed';
   }
 
   function generateWhatsAppRawText() {
@@ -433,7 +429,7 @@
     const budget = getSelectedBudget();
     const notes = (document.getElementById('clientNotes')?.value || '').trim();
 
-    let text = `Hi PK Agency team! 👋\n\nI'm *${name}* from *${business}*.\n\n🎯 *Services Needed:* ${services}\n💰 *Budget Range:* ${budget}`;
+    let text = `Hi Skavo Technologies team! 👋\n\nI'm *${name}* from *${business}*.\n\n🎯 *Services Needed:* ${services}\n💰 *Budget:* ${budget}`;
     if (notes) {
       text += `\n📝 *Project Notes:* ${notes}`;
     }
@@ -447,8 +443,12 @@
 
   function updateWhatsAppLink() {
     const rawText = generateWhatsAppRawText();
-    const url = 'https://wa.me/919876543210?text=' + encodeURIComponent(rawText);
-    if (directWhatsApp) directWhatsApp.setAttribute('href', url);
+    const encoded = encodeURIComponent(rawText);
+    const url1 = 'https://wa.me/' + WA_NUM1 + '?text=' + encoded;
+    const url2 = 'https://wa.me/' + WA_NUM2 + '?text=' + encoded;
+
+    if (directWhatsApp1) directWhatsApp1.setAttribute('href', url1);
+    if (directWhatsApp2) directWhatsApp2.setAttribute('href', url2);
 
     const waPreview = document.getElementById('waPreviewText');
     if (waPreview) {
@@ -457,15 +457,22 @@
   }
 
   // Update on input changes
-  ['clientName', 'clientBusiness', 'clientNotes'].forEach((id) => {
+  ['clientName', 'clientBusiness', 'clientNotes', 'clientBudget'].forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', updateWhatsAppLink);
   });
   updateWhatsAppLink();
 
-  if (whatsappBtn) {
-    whatsappBtn.addEventListener('click', () => {
-      const url = 'https://wa.me/919876543210?text=' + generateWhatsAppText();
+  if (whatsappBtn1) {
+    whatsappBtn1.addEventListener('click', () => {
+      const url = 'https://wa.me/' + WA_NUM1 + '?text=' + generateWhatsAppText();
+      window.open(url, '_blank');
+    });
+  }
+
+  if (whatsappBtn2) {
+    whatsappBtn2.addEventListener('click', () => {
+      const url = 'https://wa.me/' + WA_NUM2 + '?text=' + generateWhatsAppText();
       window.open(url, '_blank');
     });
   }
@@ -541,20 +548,93 @@
         return;
       }
 
-      formMsg.textContent = 'Thank you ' + name + '! Your brief has been received. A senior partner will contact you within 2 hours.';
-      formMsg.style.color = 'var(--brand-red)';
+      const submitBtn = document.getElementById('submitBtn');
+      const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Send Query to Both Emails ➔';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Sending Query to Both Emails... ⏳';
+      }
 
-      // Auto trigger WhatsApp option popup after 0.8s
-      setTimeout(() => {
-        const ok = confirm('Brief submitted! Would you also like to open WhatsApp to connect directly with the team right now?');
-        if (ok) {
-          window.open('https://wa.me/919876543210?text=' + generateWhatsAppText(), '_blank');
+      const notes = (document.getElementById('clientNotes')?.value || '').trim();
+      const budget = getSelectedBudget();
+      const services = getSelectedServices().join(', ');
+
+      const payload = {
+        name: name,
+        business: business,
+        email: email,
+        phone: phone,
+        services: services,
+        budget: budget,
+        notes: notes,
+        _subject: `New Client Brief: ${name} (${business}) - Skavo Technologies`,
+        _cc: 'gururaghav92@gmail.com',
+        _replyto: email,
+        _template: 'table'
+      };
+
+      // Dispatches email to palanikathirvel05@gmail.com with CC to gururaghav92@gmail.com
+      fetch('https://formsubmit.co/ajax/palanikathirvel05@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response error');
+        return res.json();
+      })
+      .then((data) => {
+        const mailtoSub = encodeURIComponent(`New Project Query: ${name} - ${business}`);
+        const mailtoBody = encodeURIComponent(
+          `Hi Skavo Technologies Team,\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone}\nServices: ${services}\nBudget: ${budget}\n\nProject Notes:\n${notes}\n`
+        );
+        const mailtoLink = `mailto:palanikathirvel05@gmail.com?cc=gururaghav92@gmail.com&subject=${mailtoSub}&body=${mailtoBody}`;
+
+        formMsg.innerHTML = `
+          <div class="mail-success-badge">
+            <h4>✓ Query Dispatched Successfully!</h4>
+            <p>Your brief has been emailed directly to <strong>palanikathirvel05@gmail.com</strong> &amp; <strong>gururaghav92@gmail.com</strong>.</p>
+            <p style="margin-top:4px;">Sender / Reply-To configured as: <strong>${email}</strong>.</p>
+            <p style="margin-top:8px;"><a href="${mailtoLink}" target="_blank" style="color:var(--brand-red); text-decoration:underline; font-weight:700;">Open in your Email App (Gmail/Outlook) to send a direct copy ↗</a></p>
+          </div>
+        `;
+      })
+      .catch((err) => {
+        // Fallback: mailto link targeting BOTH emails (Primary + CC)
+        const mailtoSub = encodeURIComponent(`New Project Query: ${name} - ${business}`);
+        const mailtoBody = encodeURIComponent(
+          `Hi Skavo Technologies Team,\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone}\nServices: ${services}\nBudget: ${budget}\n\nProject Notes:\n${notes}\n`
+        );
+        const mailtoLink = `mailto:palanikathirvel05@gmail.com?cc=gururaghav92@gmail.com&subject=${mailtoSub}&body=${mailtoBody}`;
+        formMsg.innerHTML = `
+          <div class="mail-success-badge" style="border-color: rgba(221,18,26,0.3); background: rgba(221,18,26,0.06);">
+            <h4 style="color: var(--brand-red);">✓ Brief Ready to Dispatch to Both Admins!</h4>
+            <p style="color: var(--text-black);">Click below to send directly via your email app (from <strong>${email}</strong> to <strong>palanikathirvel05@gmail.com</strong> &amp; <strong>gururaghav92@gmail.com</strong>):</p>
+            <p style="margin-top:8px;"><a href="${mailtoLink}" target="_blank" class="btn btn--primary btn--sm" style="display:inline-block; margin-top:4px;">Launch Mail App to Send ➔</a></p>
+          </div>
+        `;
+      })
+      .finally(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
         }
-      }, 800);
 
-      projectForm.reset();
-      servicePillBtns.forEach((b, i) => b.classList.toggle('active', i === 0));
-      budgetPillBtns.forEach((b, i) => b.classList.toggle('active', i === 1));
+        // WhatsApp prompt with dual contact option
+        setTimeout(() => {
+          const choice = confirm(`Brief logged for ${name}!\nWould you like to connect immediately via WhatsApp?\n\n• Click OK to chat with Palani (+91 8122701981)\n• Or click Cancel, and use the Guru (+91 9342785176) button below!`);
+          if (choice) {
+            window.open('https://wa.me/' + WA_NUM1 + '?text=' + generateWhatsAppText(), '_blank');
+          }
+        }, 700);
+
+        projectForm.reset();
+        servicePillBtns.forEach((b, i) => b.classList.toggle('active', i === 0));
+        updateWhatsAppLink();
+      });
     });
   }
 

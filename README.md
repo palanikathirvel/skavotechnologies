@@ -1,12 +1,12 @@
-# P.K Creative Agency — Portfolio Website
+# Skavo Technologies — Portfolio Website
 
-A single-page portfolio for **P.K Creative Agency**, built as a static site — no build step, no dependencies.
+A single-page portfolio for **Skavo Technologies**, built as a static site — no build step, no dependencies.
 
 ## Design direction
 
 **"Warm Editorial × Red, Black & White"** — the editorial layout system
 (Fraunces serif display + General Sans grotesque, asymmetric grid, airy spacing)
-rendered strictly in the palette of the agency's PK eagle emblem:
+rendered strictly in the palette of the agency's emblem:
 
 | Role | Color | Hex |
 | --- | --- | --- |
@@ -49,7 +49,7 @@ assets/         — emblem (logo.png, logo-nav.png) and favicon.png
 ```
 
 ## Repository
-- GitHub Repository: [https://github.com/palanikathirvel/pkagency](https://github.com/palanikathirvel/pkagency)
-- Git Remote Clone URL: `https://github.com/palanikathirvel/pkagency.git`
+- GitHub Repository: [https://github.com/palanikathirvel/skavotechnologies](https://github.com/palanikathirvel/skavotechnologies)
+- Git Remote Clone URL: `https://github.com/palanikathirvel/skavotechnologies.git`
 
 Client names, testimonials and stats are placeholders — swap in real copy when ready.

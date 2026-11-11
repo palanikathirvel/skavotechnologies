@@ -9,3 +9,6 @@ desktop.ini
 
 # Local server logs
 *.log
+
+# Backups
+assets/backup/
